@@ -10,4 +10,4 @@ git add .
 git commit -m "$commit_message"
 
 # Pousse les modifications vers le dépôt distant
-git push
+git push origins main
