@@ -1,5 +1,7 @@
 package com.example.activitea.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	
+	//Crud C
 	@PostMapping("/register")
 	public ResponseEntity<String> create(@RequestBody User user){
 		if (userService.createUser(user)) {
@@ -27,10 +29,10 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping("/")
-	public String getmessage() {
-		return "Coucou tu gères";
-		
+	//Crud Read the user pour le mode admin
+	@GetMapping("/admin")
+	public List<User> read(){
+		return userService.readUser();
 	}
 	
 }

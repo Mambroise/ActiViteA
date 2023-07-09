@@ -66,8 +66,8 @@ public class Security {
 			        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			        .authorizeHttpRequests(auth -> 
 			          auth.requestMatchers("/**").permitAll()
-			          .requestMatchers("").permitAll()
-			          .requestMatchers("").permitAll()
+			          .requestMatchers(HttpMethod.POST,"/register").permitAll()
+			          .requestMatchers(HttpMethod.POST,"/login").permitAll()
 			              .anyRequest().authenticated()
 			        );
 			    

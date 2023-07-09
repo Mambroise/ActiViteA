@@ -23,5 +23,5 @@ public class UserLoginDetailsService implements UserDetailsService{
 		}
 		return new UserLogin(user);
 	}
-
 }
+ 

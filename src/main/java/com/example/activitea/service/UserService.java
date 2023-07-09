@@ -1,5 +1,7 @@
 package com.example.activitea.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,5 +25,11 @@ public class UserService {
 			return true;
 		}
 		return false;
+	}
+	
+	//CRUD Read user in admin pages
+	public List<User> readUser () {
+		System.out.println(userRepo.findAll());
+		return userRepo.findAll();
 	}
 }

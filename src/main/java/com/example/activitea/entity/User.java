@@ -3,6 +3,8 @@ package com.example.activitea.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +17,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class User {
@@ -26,17 +29,20 @@ public class User {
 	
 	
 	@Column(length=100)
+	@Size(min = 2,max = 50)
 	private String name;
 	@Column(length=100)
+	@Size(min = 2,max = 100)
 	private String firstname;
 	@Email
-	@NotBlank(message = "ce champs doit être rempli")
+	@NotBlank(message = "ce champs esr requis")
 	@Column(length=100,nullable=false,unique=true)
 	private String email;
 	@NotBlank
 	private String password;
-	
-	 @ManyToMany(fetch = FetchType.EAGER,cascade =  CascadeType.MERGE)
+		
+	  @JsonIgnore
+	  @ManyToMany(fetch = FetchType.EAGER,cascade =  CascadeType.MERGE)
 	  @JoinTable(  name = "user_roles", 
 	        joinColumns = @JoinColumn(name = "user_id"), 
 	        inverseJoinColumns = @JoinColumn(name = "role_id"))
