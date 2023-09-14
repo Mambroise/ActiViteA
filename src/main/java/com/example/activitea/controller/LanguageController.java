@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import com.example.activitea.Dto.LanguageDto;
 import com.example.activitea.service.LanguageService;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 public class LanguageController {
 
 
@@ -48,7 +50,7 @@ public class LanguageController {
 	
 	//Crud update the language
 	@PutMapping("/language/{id}")
-	public ResponseEntity<String> updateLanguage(@PathVariable("id") int languageId,@RequestBody LanguageDto languageDto){
+	public ResponseEntity<String> updateLanguage(@PathVariable("id") int languageId, @RequestBody LanguageDto languageDto){
 		if (languageService.updateCursus(languageId, languageDto)) {
 			 return new ResponseEntity<>("La langue a bien été mis à jour", HttpStatus.ACCEPTED);
 		} else {

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import com.example.activitea.Dto.CursusDto;
 import com.example.activitea.service.CursusService;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 public class CursusController {
 
 	@Autowired
@@ -47,7 +49,7 @@ public class CursusController {
 	
 	//Crud Update the selected Cursus
 	@PutMapping("/cursus/{id}")
-	public ResponseEntity<String> updateCursus(@PathVariable("id") int cursusId, @RequestBody CursusDto cursusDto) {
+	public ResponseEntity<String> updateCursus(@PathVariable("id") int cursusId,@RequestBody CursusDto cursusDto) {
 	    if (cursusService.updateCursus(cursusId, cursusDto)) {
 	        return new ResponseEntity<>("Le diplome a bien été mis à jour", HttpStatus.ACCEPTED);
 	    } else {

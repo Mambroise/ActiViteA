@@ -49,6 +49,7 @@ public class CursusService {
 		        Cursus cursus = optionalCursus.get();
 		        cursus.setDiploma(cursusDto.getDiploma());
 		        cursus.setSchool(cursusDto.getSchool());
+		        cursus.setDate(cursusDto.getDate());
 		        cursusRepository.save(cursus); // Save modifications
 		        return true;
 		    } else {

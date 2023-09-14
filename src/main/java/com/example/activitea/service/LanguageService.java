@@ -41,13 +41,13 @@ public class LanguageService {
 		return languageRepository.findById(languageId).isEmpty() ? true :  false ;
 	}
 	
-	//crud  update the experience
-	public boolean updateCursus(int languageId, LanguageDto languageDto) {
+	//crud  update the language
+	public boolean updateCursus(int languageId,  LanguageDto languageDto) {
 		 Optional<Language> optionalLanguage = languageRepository.findById(languageId);
 		    
 		    if (optionalLanguage.isPresent()) {
 		        Language language = optionalLanguage.get();
-		        language.setLanguage(null);
+		        language.setLanguage(languageDto.getLanguage());
 		        language.setStars(languageDto.getStars());
 		        languageRepository.save(language); // Save modifications
 		        return true;
@@ -55,6 +55,7 @@ public class LanguageService {
 		        return false;
 		    }
 	}
+	
 	// Method to convert languageDto into language
 	public Language convertDtoToEntity(LanguageDto languageDto) {
 		Language language = new Language();

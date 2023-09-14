@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.activitea.entity.User;
+import com.example.activitea.Dto.UserDto;
 import com.example.activitea.service.UserService;
 
 
@@ -19,9 +19,9 @@ public class userTest {
 	public UserService userService;
 	@Test
 	void create() {
-		User user=new User();
+		UserDto user=new UserDto();
 		user.setName("albert");
-		user.setFirstname("Fifi");
+		user.setFirstName("Fifi");
 		user.setEmail("usertest@test.fr");
 		user.setPassword("123");
 		

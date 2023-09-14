@@ -2,6 +2,7 @@ package com.example.activitea.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,40 +18,64 @@ public class ProEmailService {
 	public ProEmailRepository proEmailRepository;
 
 	//Crud create a new professionnal email which will figure on the the coverLetter
-	public boolean create(ProEmail proEmail) {
-		proEmail.setEmail(proEmail.getEmail().trim());
-		if(proEmailRepository.findByEmail(proEmail.getEmail())!=null) {
+	public boolean create(ProEmailDto proEmailDto){
+		if(proEmailRepository.findByEmail(proEmailDto.getProEmail().trim())!=null) {
 			return false;
 		}else {
-			proEmailRepository.save(proEmail);
+			proEmailRepository.save(convertDtoToEntity(proEmailDto));
 			return true;
 		}
 	}
 	
 	//Crud Read and display all the emails from a User
-	public List<ProEmail> readByUserId(int userId) {
-		return proEmailRepository.findByUserId(userId);
+	public List<ProEmailDto> readByUserId(int userId) {
+		return proEmailRepository.findByUserId(userId).stream().map(this::convertEntityToDto).collect(Collectors.toList());
 	}
 	
-	//fin by id and display the selected email 
-	public Optional<ProEmail> findById(int emailId) {
-		return proEmailRepository.findById(emailId);
+	//find by id and display the selected email 
+	public ProEmailDto findById(int emailId) {
+		return convertEntityToDto(proEmailRepository.findById(emailId).get()) ;
 	}
 	
-	
+	//crud  update the proemail
+	public boolean updateProEmail(int emailId, ProEmailDto proEmailDto) {
+		 Optional<ProEmail> optionalProEmail = proEmailRepository.findById(emailId);
+		    
+		    if (optionalProEmail.isPresent()) {
+		        ProEmail proEmail = optionalProEmail.get();
+		        proEmail.setEmail(proEmailDto.getProEmail());
+		        proEmailRepository.save(proEmail); // Save modifications
+		        return true;
+		    } else {
+		        return false;
+		    }
+	}
+
 	//Crud Delete the selected pro Email
 	public boolean deleteEmail(int emailId) {
 		proEmailRepository.deleteById(emailId);
 		return proEmailRepository.findById(emailId).isEmpty() ? true :  false ;
 	}
 	
-	//Crud Delete the selected pro Email
-		public ProEmail convertDtoToEntity(ProEmailDto proEmailDto) {
-			ProEmail proEmail=new ProEmail();
-			User user = new User();
-			user.setId(proEmailDto.getUserId());
-			proEmail.setEmail(proEmailDto.getProEmail());
-			proEmail.setUser(user);
-			return proEmail;
-		}
+	//Convert DTO to Entity
+	public ProEmail convertDtoToEntity(ProEmailDto proEmailDto) {
+		ProEmail proEmail=new ProEmail();
+		User user = new User();
+		user.setId(proEmailDto.getUserId());
+		proEmail.setEmail(proEmailDto.getProEmail());
+		proEmail.setUser(user);
+		return proEmail;
+	}
+	
+	//Convert entity to Dto
+	public ProEmailDto convertEntityToDto(ProEmail proEmail) {
+		ProEmailDto proEmailDto=new ProEmailDto();
+		proEmailDto.setId(proEmail.getId());
+		proEmailDto.setProEmail(proEmail.getEmail());
+		proEmailDto.setUserId(proEmail.getUser().getId());
+		proEmailDto.setFirstName(proEmail.getUser().getFirstname());
+		proEmailDto.setName(proEmail.getUser().getName());
+		proEmailDto.setEmail(proEmail.getUser().getEmail());
+		return proEmailDto;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import com.example.activitea.Dto.SkillDto;
 import com.example.activitea.service.SkillService;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 public class SkillController {
 
 	@Autowired
@@ -47,8 +49,8 @@ public class SkillController {
 	
 	//Crud update the user skill
 	@PutMapping("/skill/{id}")
-	public ResponseEntity<String> updateSkill(@PathVariable("id") int skillId,@RequestBody SkillDto skillDto){
-			if (skillService.updateSkill(skillId,skillDto)) {
+	public ResponseEntity<String> updateSkill(@PathVariable("id") int skillId, @RequestBody SkillDto skillDto){
+			if (skillService.updateSkill(skillId, skillDto)) {
 				return new ResponseEntity<>("La compétence a bien été mis à jour", HttpStatus.ACCEPTED);
 			} else {
 				return new ResponseEntity<>("La compétence n'a pas pu être mis à jour", HttpStatus.ACCEPTED);

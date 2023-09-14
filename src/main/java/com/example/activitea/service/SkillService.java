@@ -38,7 +38,10 @@ public class SkillService {
 		Optional<Skill> optionalSkill=skillRepository.findById(skillId);
 		
 		if (optionalSkill.isPresent()) {
-			skillRepository.save(convertDtotoEntity(skillDto));
+			Skill skill = new Skill();
+			skill = optionalSkill.get();
+			skill.setSkill(skillDto.getSkill());
+			skillRepository.save(skill);
 			return true;
 		} else {
 			return false;

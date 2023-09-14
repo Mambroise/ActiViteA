@@ -1,6 +1,5 @@
 package com.example.activitea.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,10 +21,9 @@ public class Language {
 	@Column(length=50)
 	private String language;
 	
-	@NotBlank
 	private Float stars;
 	
-	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER              )
 	private User user;
 
 	public int getId() {

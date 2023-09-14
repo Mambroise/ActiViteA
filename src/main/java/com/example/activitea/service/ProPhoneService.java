@@ -2,11 +2,14 @@ package com.example.activitea.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.activitea.Dto.ProPhoneDto;
 import com.example.activitea.entity.ProPhone;
+import com.example.activitea.entity.User;
 import com.example.activitea.repository.ProPhoneRepository;
 
 @Service
@@ -16,8 +19,8 @@ public class ProPhoneService {
 	private ProPhoneRepository proPhoneRepository;
 	
 	//Crud create a new Pro Phone number which will figure on the the coverLetter
-		public boolean create(ProPhone proPhone) {
-			if(proPhoneRepository.save(proPhone)!=null) {
+		public boolean create(ProPhoneDto proPhoneDto) {
+			if(proPhoneRepository.save(convertDtoToEntity(proPhoneDto))!=null) {
 				return true;
 			}else {
 				return false;
@@ -25,18 +28,53 @@ public class ProPhoneService {
 		}
 		
 		//Crud Read and display all pro phone numbers from a User
-		public List<ProPhone> readByUserId(int userId) {
-			return proPhoneRepository.findByUserId(userId);
+		public List<ProPhoneDto> readByUserId(int userId) {
+			return proPhoneRepository.findByUserId(userId).stream().map(this::convertEntityToDto).collect(Collectors.toList());
 		}
 		
-		//fin by id and display the selected email 
-		public Optional<ProPhone> findById(int proPhoneId) {
-			return proPhoneRepository.findById(proPhoneId);
+		//find by id and display the selected phone number 
+		public ProPhoneDto findById(int proPhoneId) {
+			return convertEntityToDto(proPhoneRepository.findById(proPhoneId).get());
 		}
 		
-		//Crud Delete the selected pro Email
+		//Crud Delete the selected pro phone number
 		public boolean deleteProPhone(int proPhoneId) {
 			proPhoneRepository.deleteById(proPhoneId);
 			return proPhoneRepository.findById(proPhoneId).isEmpty() ? true :  false ;
+		}
+		
+		public boolean updateProPhone(int phoneId, ProPhoneDto proPhonceDto) {
+			 Optional<ProPhone> optionalProPhone = proPhoneRepository.findById(phoneId);
+			    
+			    if (optionalProPhone.isPresent()) {
+			        ProPhone proPhone = optionalProPhone.get();
+			        proPhone.setPhone(proPhonceDto.getPhone());
+			        proPhoneRepository.save(proPhone); // Save modifications
+			        return true;
+			    } else {
+			        return false;
+			    }
+		}
+		
+		//Method to convert Dto to entity
+		public ProPhone convertDtoToEntity(ProPhoneDto proPhoneDto) {
+		ProPhone proPhone=new ProPhone();
+		User user=new User();
+		user.setId(proPhoneDto.getUserId());
+		proPhone.setPhone(proPhoneDto.getPhone().trim());
+		proPhone.setUser(user);
+		return proPhone;
+		}
+		
+		//Method to convert entity to Dto
+		public ProPhoneDto convertEntityToDto(ProPhone proPhone) {
+			ProPhoneDto proPhoneDto=new ProPhoneDto();
+			proPhoneDto.setId(proPhone.getId());
+			proPhoneDto.setPhone(proPhone.getPhone());
+			proPhoneDto.setUserId(proPhone.getUser().getId());
+			proPhoneDto.setFirstName(proPhone.getUser().getFirstname());
+			proPhoneDto.setName(proPhone.getUser().getName());
+			proPhoneDto.setEmail(proPhone.getUser().getEmail());
+			return proPhoneDto;
 		}
 }
