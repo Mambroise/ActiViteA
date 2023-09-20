@@ -6,7 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.activitea.entity.CoverLetter;
 
-public interface CoverLetterRepository extends JpaRepository<CoverLetter, Integer>{
+public interface CoverLetterRepository extends JpaRepository<CoverLetter, Integer> {
 
-	List<CoverLetter> findByUserId(int userId);
+    List<CoverLetter> findByUserId(int userId);
+
+    CoverLetter findTopByUserIdOrderByIdDesc(int userId);
 }
+

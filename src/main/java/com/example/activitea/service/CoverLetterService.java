@@ -27,11 +27,16 @@ public class CoverLetterService {
 		return coverLetterRepository.findByUserId(userId).stream().map(this::convertEntityToDto).collect(Collectors.toList());
 	};
 	
+	public CoverLetter getLastCoverLetter(int userId) {
+	        return coverLetterRepository.findTopByUserIdOrderByIdDesc(userId);
+	};
+	
 	//fin by id and display the selected coverletter 
 	public CoverLetterDto findById(int addressId) {
 		return convertEntityToDto(coverLetterRepository.findById(addressId).get()) ;
-	}
+	};
 	
+	//delete the coverletter slected by id
 	public boolean deleteCoverLetter(int userId) {
 		coverLetterRepository.deleteById(userId);
 		return coverLetterRepository.findById(userId).isEmpty() ? true :  false ;

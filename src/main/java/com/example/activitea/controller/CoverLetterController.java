@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.activitea.Dto.CoverLetterDto;
+import com.example.activitea.entity.CoverLetter;
 import com.example.activitea.service.CoverLetterService;
 
 @Controller
+@CrossOrigin("http://localhost:3000")
 public class CoverLetterController {
 
 	@Autowired
@@ -26,9 +29,9 @@ public class CoverLetterController {
 		@PostMapping("/coverletter")
 		public ResponseEntity<String> create(@RequestBody CoverLetterDto coverLetterDto){
 			if (coverLetterService.create(coverLetterDto)) {
-				return new ResponseEntity<String>("",HttpStatus.ACCEPTED);
+				return new ResponseEntity<String>("L'annonce a bien été enregistrée",HttpStatus.ACCEPTED);
 			} else {
-				return new ResponseEntity<String>("",HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("oups, une erreur s'est produite",HttpStatus.BAD_REQUEST);
 			}
 		}
 
@@ -43,6 +46,17 @@ public class CoverLetterController {
 		public CoverLetterDto findEmailById(@PathVariable("id") int coverLetterId){
 			return  coverLetterService.findById(coverLetterId);
 		}
+		
+// find the last coverletter created 
+	    @GetMapping("/last-coverletter/{id}")
+	    public ResponseEntity<CoverLetter> getLastCoverLetter(@PathVariable("id") int userId) {
+	        CoverLetter lastCoverLetter = coverLetterService.getLastCoverLetter(userId);
+	        if (lastCoverLetter != null) {
+	            return ResponseEntity.ok(lastCoverLetter);
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+	    }
 		
 		//Crud update the coverletter
 		@PutMapping("/coverletter/{id}")

@@ -59,8 +59,8 @@ public class UserService {
 		    }
 	}
 	//Crud Update the user password
-	public boolean changePassword( PasswordDto passwordDto) {
-		Optional<User> optionalUser = userRepo.findById(passwordDto.getId());
+	public boolean changePassword(int userId, PasswordDto passwordDto) {
+		Optional<User> optionalUser = userRepo.findById(userId);
 		
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();

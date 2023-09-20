@@ -48,8 +48,9 @@ public class UserController {
 	}
 	
 	//Crud Update the user, except password
-	@PutMapping("/updateuser")
+	@PutMapping("/updateuser/{id}")
 	public ResponseEntity<String> updateUser(@PathVariable("id") int userId,@RequestBody UserDto userDto){
+		System.err.println("coucou dans change password");
 		if (userService.updateUser(userId,userDto)) {
 			return new ResponseEntity<String>(userDto.getName()+" "+userDto.getFirstName()+" a bien été mis à jour",HttpStatus.CREATED);
 		} else {
@@ -58,9 +59,9 @@ public class UserController {
 	}
 	
 	//Crud Update the user password
-	@PutMapping("/updatepassword")
-	public ResponseEntity<String> updateUserPassword(@RequestBody PasswordDto passwordDto){
-		if (userService.changePassword(passwordDto)) {
+	@PutMapping("/updatepassword/{id}")
+	public ResponseEntity<String> updateUserPassword(@PathVariable("id") int userId,@RequestBody PasswordDto passwordDto){
+		if (userService.changePassword(userId,passwordDto)) {
 			return new ResponseEntity<String>("Votre mot de passe a bien été mis à jour",HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Votre mot de passe n'a pas pu être mis à jour",HttpStatus.BAD_REQUEST);
