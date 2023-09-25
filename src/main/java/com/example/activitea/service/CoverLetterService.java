@@ -32,8 +32,8 @@ public class CoverLetterService {
 	};
 	
 	//fin by id and display the selected coverletter 
-	public CoverLetterDto findById(int addressId) {
-		return convertEntityToDto(coverLetterRepository.findById(addressId).get()) ;
+	public CoverLetterDto findById(int coverletterId) {
+		return convertEntityToDto(coverLetterRepository.findById(coverletterId).get()) ;
 	};
 	
 	//delete the coverletter slected by id

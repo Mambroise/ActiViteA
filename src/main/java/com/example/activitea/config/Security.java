@@ -68,6 +68,7 @@ public class Security {
 			          auth.requestMatchers("/**").permitAll()
 			          .requestMatchers(HttpMethod.POST,"/register").permitAll()
 			          .requestMatchers(HttpMethod.POST,"/login").permitAll()
+			          .requestMatchers(HttpMethod.GET,"/creatpdf").permitAll()
 			              .anyRequest().authenticated()
 			        );
 			    
