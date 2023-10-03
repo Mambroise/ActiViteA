@@ -69,8 +69,8 @@ public class CoverLetterController {
 		
 		//Crud update the coverletter
 		@PutMapping("/coverletter/{id}")
-		public ResponseEntity<String> updateCoverLetter(@RequestBody CoverLetterDto coverLetterDto){
-			if (coverLetterService.updateCoverLetter(coverLetterDto)) {
+		public ResponseEntity<String> updateCoverLetter(@PathVariable("id") int coverLetterId, @RequestBody CoverLetterDto coverLetterDto){
+			if (coverLetterService.updateCoverLetter(coverLetterId, coverLetterDto)) {
 				
 				 return new ResponseEntity<>("La letter de motivation a bien été mis à jour", HttpStatus.ACCEPTED);
 			} else {

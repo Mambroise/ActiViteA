@@ -50,7 +50,6 @@ public class UserController {
 	//Crud Update the user, except password
 	@PutMapping("/updateuser/{id}")
 	public ResponseEntity<String> updateUser(@PathVariable("id") int userId,@RequestBody UserDto userDto){
-		System.err.println("coucou dans change password");
 		if (userService.updateUser(userId,userDto)) {
 			return new ResponseEntity<String>(userDto.getName()+" "+userDto.getFirstName()+" a bien été mis à jour",HttpStatus.CREATED);
 		} else {

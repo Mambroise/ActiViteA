@@ -38,7 +38,7 @@ public class GPTController {
 	        headers.setContentType(MediaType.APPLICATION_JSON);
 
 	        Map<String, Object> requestBody = new HashMap<>();
-	        requestBody.put("model", "gpt-3.5-turbo"); // Specify the model you want to use
+	        requestBody.put("model", "gpt-3.5-turbo"); 
 
 	        List<Map<String, String>> messages = new ArrayList<>();
 	        Map<String, String> systemMessage = new HashMap<>();
@@ -53,7 +53,7 @@ public class GPTController {
 	        messages.add(userMessage);
 
 	        requestBody.put("messages", messages);
-	        requestBody.put("max_tokens", 2000); // her i adjust the number of  as needed
+	        requestBody.put("max_tokens", 2000); // here i adjust the number of tokens  as needed
 
 	        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 	        ResponseEntity<String> responseEntity = restTemplate.exchange(gptApiUrl, HttpMethod.POST, requestEntity, String.class);

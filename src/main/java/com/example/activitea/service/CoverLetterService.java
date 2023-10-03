@@ -43,8 +43,8 @@ public class CoverLetterService {
 	};
 
 	//Crud Update the coverletter
-	public boolean updateCoverLetter( CoverLetterDto coverLetterDto) {
-		 Optional<CoverLetter> optionalCoverLetter = coverLetterRepository.findById(coverLetterDto.getId());
+	public boolean updateCoverLetter(int coverLetterId, CoverLetterDto coverLetterDto) {
+		 Optional<CoverLetter> optionalCoverLetter = coverLetterRepository.findById(coverLetterId);
 		    
 		    if (optionalCoverLetter.isPresent()) {
 		        CoverLetter coverLetter = optionalCoverLetter.get();
