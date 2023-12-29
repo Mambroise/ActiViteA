@@ -27,7 +27,8 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private int id;
 	
-	
+	@Column(length = 5)
+	private String gender;
 	@Column(length=100)
 	@Size(min = 2,max = 50)
 	private String name;
@@ -56,6 +57,12 @@ public class User {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	public String getName() {
 		return name;
@@ -93,8 +100,5 @@ public class User {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	
-	
-	
 	
 }

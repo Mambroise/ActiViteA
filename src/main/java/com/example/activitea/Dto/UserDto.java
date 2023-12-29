@@ -7,6 +7,7 @@ import com.example.activitea.entity.Role;
 public class UserDto {
 
 	private int id;
+	private String gender;
 	private String name;
 	private String firstName;
 	private String email;
@@ -18,6 +19,12 @@ public class UserDto {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	public String getName() {
 		return name;

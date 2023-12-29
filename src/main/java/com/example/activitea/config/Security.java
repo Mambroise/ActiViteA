@@ -3,7 +3,6 @@ package com.example.activitea.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -14,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
 import com.example.activitea.config.jwt.AuthEntryPointJwt;
 import com.example.activitea.config.jwt.AuthTokenFilter;
@@ -47,30 +47,33 @@ public class Security {
 	    return authProvider;
 	}
 	
-	  @Bean
-	  public AuthTokenFilter authenticationJwtTokenFilter() {
-	    return new AuthTokenFilter();
-	  }
-	  
-	  @Bean
-	  public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-	    return authConfig.getAuthenticationManager();
-	  }
+	@Bean
+	public AuthTokenFilter authenticationJwtTokenFilter() {
+		return new AuthTokenFilter();
+	}
+  
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+		return authConfig.getAuthenticationManager();
+	}
 
  
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		
-			    http.csrf(csrf -> csrf.disable())
-			        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-			        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			        .authorizeHttpRequests(auth -> 
-			          auth.requestMatchers("/**").permitAll()
-			          .requestMatchers(HttpMethod.POST,"/register").permitAll()
-			          .requestMatchers(HttpMethod.POST,"/login").permitAll()
-			          .requestMatchers(HttpMethod.GET,"/creatpdf").permitAll()
-			              .anyRequest().authenticated()
-			        );
+
+        http.csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(headers -> headers
+                        .contentSecurityPolicy("default-src 'self' data: w3.org/svg/2000")
+                        .and()
+                        .xssProtection(xXssConfig -> xXssConfig.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED)))
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers("/**").permitAll()
+//			          .requestMatchers(HttpMethod.POST,"/register").permitAll()
+//			          .requestMatchers(HttpMethod.POST,"/login").permitAll()
+                                .anyRequest().authenticated()
+                );
 			    
 			   // http.authenticationProvider(authenticationJwtTokenFilter());
 

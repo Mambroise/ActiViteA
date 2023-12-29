@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.activitea.Dto.PasswordDto;
 import com.example.activitea.Dto.UserDto;
+import com.example.activitea.entity.PasswordChangeResult;
 import com.example.activitea.entity.Role;
 import com.example.activitea.entity.User;
 import com.example.activitea.repository.UserRepository;
@@ -59,21 +60,20 @@ public class UserService {
 		    }
 	}
 	//Crud Update the user password
-	public boolean changePassword(int userId, PasswordDto passwordDto) {
+	public PasswordChangeResult changePassword(int userId, PasswordDto passwordDto) {
 		Optional<User> optionalUser = userRepo.findById(userId);
 		
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
-			
-			if (user.getPassword() != passwordDto.getOldPassword()) {
-				return false;
+			if (!new BCryptPasswordEncoder().matches(passwordDto.getOldPassword(),user.getPassword()) ) {
+				return new PasswordChangeResult(false,"L'ancien mot de passe ne correspond pas" );
 			} else {
-				user.setPassword(passwordDto.getNewPassword());;
+				user.setPassword(new BCryptPasswordEncoder().encode(passwordDto.getNewPassword().trim()));;
 				userRepo.save(user); // Save modifications
-				return true;
+				return new PasswordChangeResult(true, "Votre mot de passe a bien été mis à jour");
 			}
 		} else {
-			return false;
+			return new PasswordChangeResult(false,"Utilisateur non trouvé");
 		}
 	}
 		
@@ -84,6 +84,7 @@ public class UserService {
 	for (Role role : userDto.getRole()) {
 		roles.add(role);
 	}
+	user.setGender(userDto.getGender());
 	user.setName(userDto.getName().trim().toLowerCase());
 	user.setFirstname(userDto.getFirstName().trim().toLowerCase());
 	user.setEmail(userDto.getEmail().trim());
@@ -96,6 +97,7 @@ public class UserService {
 	public UserDto convertEntityToDto(User user) {
 	UserDto userDto=new UserDto();
 	userDto.setId(user.getId());
+	userDto.setGender(user.getGender());
 	userDto.setName(user.getName());
 	userDto.setFirstName(user.getFirstname());
 	userDto.setEmail(user.getEmail());

@@ -36,19 +36,19 @@ public class AddressController {
 
 	//Crud Read the user addresses to select one 
 	@GetMapping("/address/{id}")
-	public List<AddressDto> readAdress(@PathVariable("id") int userId){
+	public List<AddressDto> readAddress(@PathVariable("id") int userId){
 		return  addressService.readByUserId(userId);
 	}
 		
 	// Find an address by id before update it or other possible action
 	@GetMapping("/updateaddress/{id}")
-	public AddressDto findEmailById(@PathVariable("id") int addressId){
+	public AddressDto findAddressById(@PathVariable("id") int addressId){
 		return  addressService.findById(addressId);
 	}
 	
 	//Crud update the pro experience
 	@PutMapping("/address/{id}")
-	public ResponseEntity<String> updateProExp(@PathVariable("id") int addressId, @RequestBody AddressDto addressDto){
+	public ResponseEntity<String> updateAddress(@PathVariable("id") int addressId, @RequestBody AddressDto addressDto){
 		if (addressService.updateAddress(addressId, addressDto)) {
 			 return new ResponseEntity<>("Le numéro a bien été mis à jour", HttpStatus.ACCEPTED);
 		} else {
@@ -58,7 +58,7 @@ public class AddressController {
 	
 	//Crud Delete the selected email from the user account
 	@DeleteMapping("/address/{id}")
-	public ResponseEntity<String> deleteProEmail(@PathVariable("id") int addressId){
+	public ResponseEntity<String> deleteAddress(@PathVariable("id") int addressId){
 		if (addressService.deleteAddress(addressId)) {
 			return new ResponseEntity<String>("L'adresse a bien été supprimée",HttpStatus.ACCEPTED);
 		} else {

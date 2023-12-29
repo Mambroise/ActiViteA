@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.activitea.Dto.PasswordDto;
 import com.example.activitea.Dto.UserDto;
+import com.example.activitea.entity.PasswordChangeResult;
 import com.example.activitea.entity.User;
 import com.example.activitea.service.UserService;
 
@@ -24,6 +25,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
 	
 	//Crud C
 	@PostMapping("/register")
@@ -60,10 +62,11 @@ public class UserController {
 	//Crud Update the user password
 	@PutMapping("/updatepassword/{id}")
 	public ResponseEntity<String> updateUserPassword(@PathVariable("id") int userId,@RequestBody PasswordDto passwordDto){
-		if (userService.changePassword(userId,passwordDto)) {
-			return new ResponseEntity<String>("Votre mot de passe a bien été mis à jour",HttpStatus.CREATED);
+		PasswordChangeResult result = userService.changePassword(userId,passwordDto);
+		if (result.isSuccess()) {
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<String>("Votre mot de passe n'a pas pu être mis à jour",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.BAD_REQUEST);
 		}
 	}
 }

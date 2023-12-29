@@ -26,12 +26,12 @@ public class CoverLetterService {
 	public List<CoverLetterDto> readByUserId(int userId){
 		return coverLetterRepository.findByUserId(userId).stream().map(this::convertEntityToDto).collect(Collectors.toList());
 	};
-	
+	//find last coverletter created by the user
 	public CoverLetter getLastCoverLetter(int userId) {
 	        return coverLetterRepository.findTopByUserIdOrderByIdDesc(userId);
 	};
 	
-	//fin by id and display the selected coverletter 
+	//find by id and display the selected coverletter 
 	public CoverLetterDto findById(int coverletterId) {
 		return convertEntityToDto(coverLetterRepository.findById(coverletterId).get()) ;
 	};

@@ -48,7 +48,7 @@ public class ProEmailController {
 	
 	//Crud update the ProEmail
 	@PutMapping("/proemail/{id}")
-	public ResponseEntity<String> updateLanguage(@PathVariable("id") int emailId,@RequestBody ProEmailDto proEmailDto){
+	public ResponseEntity<String> updateProEmail(@PathVariable("id") int emailId,@RequestBody ProEmailDto proEmailDto){
 		if (proEmailService.updateProEmail(emailId,proEmailDto)) {
 			 return new ResponseEntity<>("L'email a bien été mis à jour", HttpStatus.ACCEPTED);
 		} else {

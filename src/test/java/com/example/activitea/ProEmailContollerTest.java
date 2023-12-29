@@ -89,7 +89,7 @@ class ProEmailControllerTest {
 
         when(proEmailService.updateProEmail(emailId, proEmailDto)).thenReturn(true);
 
-        ResponseEntity<String> response = proEmailController.updateLanguage(emailId, proEmailDto);
+        ResponseEntity<String> response = proEmailController.updateProEmail(emailId, proEmailDto);
 
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
         assertEquals("L'email a bien été mis à jour", response.getBody());
@@ -103,7 +103,7 @@ class ProEmailControllerTest {
 
         when(proEmailService.updateProEmail(emailId, proEmailDto)).thenReturn(false);
 
-        ResponseEntity<String> response = proEmailController.updateLanguage(emailId, proEmailDto);
+        ResponseEntity<String> response = proEmailController.updateProEmail(emailId, proEmailDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("L'email n'a pas pu être mis à jour", response.getBody());
