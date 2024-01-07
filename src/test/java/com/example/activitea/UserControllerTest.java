@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import com.example.activitea.Dto.PasswordDto;
 import com.example.activitea.Dto.UserDto;
 import com.example.activitea.controller.UserController;
+import com.example.activitea.entity.ValidationResult;
 import com.example.activitea.entity.User;
 import com.example.activitea.service.UserService;
 
@@ -119,7 +120,7 @@ class UserControllerTest {
         int userId = 1;
         PasswordDto passwordDto = new PasswordDto();
 
-        when(userService.changePassword(userId, passwordDto)).thenReturn(true);
+        when(userService.changePassword(userId, passwordDto)).thenReturn(new ValidationResult(true, "Votre mot de passe a bien été mis à jour"));
 
         ResponseEntity<String> response = userController.updateUserPassword(userId, passwordDto);
 
@@ -132,7 +133,7 @@ class UserControllerTest {
         int userId = 1;
         PasswordDto passwordDto = new PasswordDto();
 
-        when(userService.changePassword(userId, passwordDto)).thenReturn(false);
+        when(userService.changePassword(userId, passwordDto)).thenReturn(new ValidationResult(false,"L'ancien mot de passe ne correspond pas" ));
 
         ResponseEntity<String> response = userController.updateUserPassword(userId, passwordDto);
 

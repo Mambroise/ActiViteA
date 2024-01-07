@@ -29,7 +29,18 @@ public class UserLogin implements UserDetails {
 	}
 	
 	public String getFullName() {
-	return user.getName() + " " + user.getFirstname();
+		String firstname = user.getFirstname();
+		String lastname = user.getName();
+		
+		if (firstname.length()>0) {
+			firstname = firstname.substring(0, 1).toUpperCase() + firstname.substring(1);
+		}
+		
+		if (lastname.length()>0) {
+			lastname = lastname.substring(0, 1).toUpperCase() + lastname.substring(1);
+		}
+		
+	return firstname + " " + lastname;
 	}
 
 	@Override

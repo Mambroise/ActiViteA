@@ -11,9 +11,17 @@ import org.springframework.stereotype.Service;
 
 import com.example.activitea.Dto.PasswordDto;
 import com.example.activitea.Dto.UserDto;
-import com.example.activitea.entity.PasswordChangeResult;
 import com.example.activitea.entity.Role;
 import com.example.activitea.entity.User;
+import com.example.activitea.entity.ValidationResult;
+import com.example.activitea.repository.AddressRepository;
+import com.example.activitea.repository.CursusRepository;
+import com.example.activitea.repository.LanguageRepository;
+import com.example.activitea.repository.LifeExpRepository;
+import com.example.activitea.repository.ProEmailRepository;
+import com.example.activitea.repository.ProExpRepository;
+import com.example.activitea.repository.ProPhoneRepository;
+import com.example.activitea.repository.SkillRepository;
 import com.example.activitea.repository.UserRepository;
 
 @Service
@@ -22,6 +30,22 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepo;
+	@Autowired
+	private SkillRepository skillRepo;
+	@Autowired
+	private ProPhoneRepository proPhoneRepo;
+	@Autowired
+	private ProExpRepository proExpRepo;
+	@Autowired
+	private ProEmailRepository proEmailRepo;
+	@Autowired
+	private LifeExpRepository lifeExpRepo;
+	@Autowired
+	private CursusRepository cursusRepo;
+	@Autowired
+	private LanguageRepository languageRepo;
+	@Autowired
+	private AddressRepository addressRepo;
 	
 	//CRUD Create a user
 	public boolean createUser(UserDto userDto) {
@@ -30,7 +54,6 @@ public class UserService {
 	
 	//CRUD Read user in admin pages
 	public List<User> readUser () {
-		System.out.println(userRepo.findAll());
 		return userRepo.findAll();
 	}
 	
@@ -60,20 +83,61 @@ public class UserService {
 		    }
 	}
 	//Crud Update the user password
-	public PasswordChangeResult changePassword(int userId, PasswordDto passwordDto) {
+	public ValidationResult changePassword(int userId, PasswordDto passwordDto) {
 		Optional<User> optionalUser = userRepo.findById(userId);
 		
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
 			if (!new BCryptPasswordEncoder().matches(passwordDto.getOldPassword(),user.getPassword()) ) {
-				return new PasswordChangeResult(false,"L'ancien mot de passe ne correspond pas" );
+				return new ValidationResult(false,"L'ancien mot de passe ne correspond pas" );
 			} else {
 				user.setPassword(new BCryptPasswordEncoder().encode(passwordDto.getNewPassword().trim()));;
 				userRepo.save(user); // Save modifications
-				return new PasswordChangeResult(true, "Votre mot de passe a bien été mis à jour");
+				return new ValidationResult(true, "Votre mot de passe a bien été mis à jour");
 			}
 		} else {
-			return new PasswordChangeResult(false,"Utilisateur non trouvé");
+			return new ValidationResult(false,"Utilisateur non trouvé");
+		}
+	}
+	
+	//Method to check the user's data presence in database
+	public ValidationResult dataControl(int userId) {
+		//find user and get the firstname
+		Optional<User> optionalUser =userRepo.findById(userId);
+		if (optionalUser.isPresent()) {
+			String userFirstname = optionalUser.get().getFirstname();
+			
+//			List<Skill> skillList =  skillRepo.findByUserId(userId);
+//			List<ProPhone> proPhoneList = proPhoneRepo.findByUserId(userId);
+//			List<ProExp> proExpList = proExpRepo.findByUserId(userId);
+//			List<ProEmail> proEmailList = proEmailRepo.findByUserId(userId);
+//			List<LifeExp> lifeExpList = lifeExpRepo.findByUserId(userId);
+//			List<Cursus> cursusList = cursusRepo.findByUserId(userId);
+//			List<Language> languageList = languageRepo.findByUserId(userId);
+//			List<Address> addressList = addressRepo.findByUserId(userId);
+			
+			//looking for user data
+			int totalData = skillRepo.findByUserId(userId).size() + proPhoneRepo.findByUserId(userId).size() +
+					proExpRepo.findByUserId(userId).size() + proEmailRepo.findByUserId(userId).size() +
+					lifeExpRepo.findByUserId(userId).size() + cursusRepo.findByUserId(userId).size() +
+					languageRepo.findByUserId(userId).size() + addressRepo.findByUserId(userId).size();
+			
+			if (totalData == 0) {
+				return new ValidationResult(false, "Hey "+ userFirstname+"! Il semble que tu n'as pas"
+						+ " d'informations personnelles d'enregistrées. Nous te conseillons de le faire"
+						+ " afin que ta lettre de motivation soit optimale");
+			} else if(totalData < 10){
+				return new ValidationResult(true, "Hey "+ userFirstname+"! Merci pour tes information, "
+						+ " cependant nous te conseillons d'en ajouter si c'est possible"
+						+ " afin que ta lettre de motivation soit optimale");
+
+			}else {
+				return new ValidationResult(true, "");
+			}
+			
+		} else {
+			return new ValidationResult(false, "Oups! Vous ne semblez pas exister dans notre base de données,"
+					+ " Veuillez réessayer");
 		}
 	}
 		

@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.activitea.Dto.PasswordDto;
 import com.example.activitea.Dto.UserDto;
-import com.example.activitea.entity.PasswordChangeResult;
+
 import com.example.activitea.entity.User;
+import com.example.activitea.entity.ValidationResult;
 import com.example.activitea.service.UserService;
 
 @RestController
@@ -62,11 +63,23 @@ public class UserController {
 	//Crud Update the user password
 	@PutMapping("/updatepassword/{id}")
 	public ResponseEntity<String> updateUserPassword(@PathVariable("id") int userId,@RequestBody PasswordDto passwordDto){
-		PasswordChangeResult result = userService.changePassword(userId,passwordDto);
+		ValidationResult result = userService.changePassword(userId,passwordDto);
 		if (result.isSuccess()) {
 			return new ResponseEntity<String>(result.getMessage(),HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>(result.getMessage(),HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	//Function to check wether the user has saved data
+	@GetMapping("/userdata/{id}")
+	public ResponseEntity<String> checkData(@PathVariable("id") int userId){
+		ValidationResult result = userService.dataControl(userId);
+		
+		if (result.isSuccess()) {
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.FOUND);
+		} else {
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.NOT_FOUND);
+		}	
 	}
 }
