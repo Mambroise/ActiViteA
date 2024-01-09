@@ -132,7 +132,7 @@ public class UserService {
 						+ " afin que ta lettre de motivation soit optimale");
 
 			}else {
-				return new ValidationResult(true, "");
+				return new ValidationResult(true, null);
 			}
 			
 		} else {

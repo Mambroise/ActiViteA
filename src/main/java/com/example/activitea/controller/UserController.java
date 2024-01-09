@@ -77,9 +77,9 @@ public class UserController {
 		ValidationResult result = userService.dataControl(userId);
 		
 		if (result.isSuccess()) {
-			return new ResponseEntity<String>(result.getMessage(),HttpStatus.FOUND);
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<String>(result.getMessage(),HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.BAD_REQUEST);
 		}	
 	}
 }
