@@ -34,32 +34,44 @@ public class AuthTokenFilter extends OncePerRequestFilter{
 		// TODO Auto-generated method stub
 		   try {
 			      String jwt = parseJwt(request);
-			      if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-			        String username = jwtUtils.getUserNameFromJwtToken(jwt);
-
-			        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-			        UsernamePasswordAuthenticationToken authentication =
-			            new UsernamePasswordAuthenticationToken(
-			                userDetails,
-			                null,
-			                userDetails.getAuthorities());
-			        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-			        SecurityContextHolder.getContext().setAuthentication(authentication);
+			      System.err.println(jwt);
+			      if(jwt == null || !jwt.equals("Login")){
+			    	  if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+			    		  String username = jwtUtils.getUserNameFromJwtToken(jwt);
+			    		  System.out.println("bearer ok");
+			    		  UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+			    		  UsernamePasswordAuthenticationToken authentication =
+			    				  new UsernamePasswordAuthenticationToken(
+			    						  userDetails,
+			    						  null,
+			    						  userDetails.getAuthorities());
+			    		  authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+			    		  
+			    		  SecurityContextHolder.getContext().setAuthentication(authentication);
+			    	  }else {
+			    		  response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
+			    		  return;
+			    	  }
 			      }
 			    } catch (Exception e) {
 			      logger.error("Cannot set user authentication: {}", e);
 			    }
-
+		   		
+		   
 			    filterChain.doFilter(request, response);
 			  }
 
 			  private String parseJwt(HttpServletRequest request) {
 			    String headerAuth = request.getHeader("Authorization");
-
+			    System.err.println(headerAuth);
 			    if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+			    	System.err.println("ca rentre");
 			      return headerAuth.substring(7);
+			    }else if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Login")) {
+			    	System.err.println("ca rentre dans login");
+			      return headerAuth;
 			    }
+			    
 
 			    return null;
 			  

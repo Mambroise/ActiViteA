@@ -34,20 +34,20 @@ public class LoginController {
 	  
 	@PostMapping("/login")
 	public ResponseEntity<?> authentificateUser(@Valid @RequestBody User loginRequest){
-		System.err.println("connexion ok");
 		Authentication authentication = authenticationManager.authenticate(
 		        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
 		    SecurityContextHolder.getContext().setAuthentication(authentication);
 		    String jwt = jwtUtils.generateJwtToken(authentication);
-		    
+		    System.err.println("1 ");
 		    UserLogin userDetails =  (UserLogin) authentication.getPrincipal();    
 		    List<String> roles = userDetails.getAuthorities().stream()
 		        .map(item -> item.getAuthority())
 		        .collect(Collectors.toList());
 
 		    return ResponseEntity.ok(new JwtResponse(jwt, 
-		                         userDetails.getUser().getId(),userDetails.getFullName(), 
+		                         userDetails.getUser().getId(),
+		                         userDetails.getFullName(), 
 		                         userDetails.getUser().getEmail(), 
 		                         roles));
 		}
