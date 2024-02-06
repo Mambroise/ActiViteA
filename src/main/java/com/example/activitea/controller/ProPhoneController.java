@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.activitea.Dto.ProPhoneDto;
+import com.example.activitea.entity.ValidationResult;
 import com.example.activitea.service.ProPhoneService;
 
 @RestController
@@ -27,10 +28,11 @@ public class ProPhoneController {
 	//Crud create a new Pro phone number
 	@PostMapping("/prophone")
 	public ResponseEntity<String> create(@RequestBody ProPhoneDto proPhoneDto){
-		if (proPhoneService.create(proPhoneDto)) {
-			return new ResponseEntity<String>("Le numéro "+proPhoneDto.getPhone()+" a bien été enregistré",HttpStatus.ACCEPTED);
+		ValidationResult result = proPhoneService.create(proPhoneDto);
+		if (result.isSuccess()) {
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.ACCEPTED);
 		} else {
-			return new ResponseEntity<String>("Le numéro "+proPhoneDto.getPhone()+" n'a pas pu être enregistré",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.BAD_REQUEST);
 		}
 	}
 

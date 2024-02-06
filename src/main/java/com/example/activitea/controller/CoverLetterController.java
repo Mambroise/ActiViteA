@@ -1,6 +1,9 @@
 package com.example.activitea.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +73,23 @@ public class CoverLetterController {
 		//Crud update the coverletter
 		@PutMapping("/coverletter/{id}")
 		public ResponseEntity<String> updateCoverLetter(@PathVariable("id") int coverLetterId, @RequestBody CoverLetterDto coverLetterDto){
+			// Define a directory for storing generated PDFs
+			String pdfStorageDirectory = "/path/to/pdf/storage";
+			try {
+				byte[] pdfBytes = pdfService.createPDFFromCoverLetter(coverLetterDto.getLetter());
+				
+				// Get current date and time
+				LocalDateTime now = LocalDateTime.now();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+				String formattedDateTime = now.format(formatter);
+				String fileName = "coverletter"+coverLetterId+"_"+formattedDateTime+".pdf";
+				String filePath = pdfStorageDirectory+File.separator+fileName;
+				pdfService.savePDFToFile(pdfBytes,filePath);
+				
+			} catch (DocumentException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (coverLetterService.updateCoverLetter(coverLetterId, coverLetterDto)) {
 				
 				 return new ResponseEntity<>("La letter de motivation a bien été mis à jour", HttpStatus.ACCEPTED);

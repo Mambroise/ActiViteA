@@ -29,6 +29,9 @@ public class Address {
 	private String city;
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;
+	
+	private boolean active;
+	
 	public int getId() {
 		return id;
 	}
@@ -70,6 +73,12 @@ public class Address {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 	

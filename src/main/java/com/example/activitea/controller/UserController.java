@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.activitea.Dto.ContactDto;
 import com.example.activitea.Dto.PasswordDto;
 import com.example.activitea.Dto.UserDto;
-
 import com.example.activitea.entity.User;
 import com.example.activitea.entity.ValidationResult;
 import com.example.activitea.service.UserService;
@@ -81,5 +81,11 @@ public class UserController {
 		} else {
 			return new ResponseEntity<String>(result.getMessage(),HttpStatus.BAD_REQUEST);
 		}	
+	}
+	
+	//Function to get all professionnal contacts : email phone and address
+	@GetMapping("/contactdata/{id}")
+	public ContactDto getContact(@PathVariable("id") int userId) {
+		return userService.userContact(userId);
 	}
 }

@@ -9,8 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.activitea.Dto.ContactDto;
 import com.example.activitea.Dto.PasswordDto;
 import com.example.activitea.Dto.UserDto;
+import com.example.activitea.entity.Address;
+import com.example.activitea.entity.ProEmail;
+import com.example.activitea.entity.ProPhone;
 import com.example.activitea.entity.Role;
 import com.example.activitea.entity.User;
 import com.example.activitea.entity.ValidationResult;
@@ -107,15 +111,6 @@ public class UserService {
 		if (optionalUser.isPresent()) {
 			String userFirstname = optionalUser.get().getFirstname();
 			
-//			List<Skill> skillList =  skillRepo.findByUserId(userId);
-//			List<ProPhone> proPhoneList = proPhoneRepo.findByUserId(userId);
-//			List<ProExp> proExpList = proExpRepo.findByUserId(userId);
-//			List<ProEmail> proEmailList = proEmailRepo.findByUserId(userId);
-//			List<LifeExp> lifeExpList = lifeExpRepo.findByUserId(userId);
-//			List<Cursus> cursusList = cursusRepo.findByUserId(userId);
-//			List<Language> languageList = languageRepo.findByUserId(userId);
-//			List<Address> addressList = addressRepo.findByUserId(userId);
-			
 			//looking for user data
 			int totalData = skillRepo.findByUserId(userId).size() + proPhoneRepo.findByUserId(userId).size() +
 					proExpRepo.findByUserId(userId).size() + proEmailRepo.findByUserId(userId).size() +
@@ -124,11 +119,11 @@ public class UserService {
 			
 			if (totalData == 0) {
 				return new ValidationResult(false, "Hey "+ userFirstname+"! Il semble que tu n'as pas"
-						+ " d'informations personnelles d'enregistrées. Nous te conseillons de le faire"
+						+ " d'informations personnelles enregistrées. Nous te conseillons de le faire"
 						+ " afin que ta lettre de motivation soit optimale");
 			} else if(totalData < 10){
-				return new ValidationResult(true, "Hey "+ userFirstname+"! Merci pour tes information, "
-						+ " cependant nous te conseillons d'en ajouter si c'est possible"
+				return new ValidationResult(true, "Hey "+ userFirstname+"! Merci pour tes informations, "
+						+ " cependant nous te conseillons d'en ajouter"
 						+ " afin que ta lettre de motivation soit optimale");
 
 			}else {
@@ -139,6 +134,40 @@ public class UserService {
 			return new ValidationResult(false, "Oups! Vous ne semblez pas exister dans notre base de données,"
 					+ " Veuillez réessayer");
 		}
+	}
+	
+	public ContactDto userContact(int userId) {
+		ContactDto userContact = new ContactDto();
+		//handling proPhone
+		Optional<ProPhone> optionalProPhone = proPhoneRepo.findByUserIdAndActiveIsTrue(userId);
+		if (optionalProPhone.isPresent()) {
+			userContact.setPhone(optionalProPhone.get().getPhone()); ;
+		} else {
+			userContact.setPhone("à déterminer");
+		}
+		//handling proEmail
+		Optional<ProEmail> optionalProEmail = proEmailRepo.findByUserIdAndActiveIsTrue(userId);
+		if (optionalProEmail.isPresent()) {
+			userContact.setEmail(optionalProEmail.get().getEmail()); ;
+		} else {
+			userContact.setEmail("à déterminer");
+		}
+		//handling pro address
+		Optional<Address> optionalAddress = addressRepo.findByUserIdAndActiveIsTrue(userId);
+		if (optionalAddress.isPresent()) {
+			Address address = new Address();
+			address.setId(optionalAddress.get().getId());
+			address.setNumber(optionalAddress.get().getNumber());
+			address.setStreet(optionalAddress.get().getStreet());
+			address.setZipCode(optionalAddress.get().getZipCode());
+			address.setCity(optionalAddress.get().getCity());
+			
+			userContact.setAddress(address); ;
+		} else {
+			userContact.setAddress(null);
+		}
+		
+		return userContact;
 	}
 		
 	//Method to convert Dto to entity
@@ -168,4 +197,5 @@ public class UserService {
 	userDto.setPassword(user.getPassword());
 	return userDto;
 	}
+
 }

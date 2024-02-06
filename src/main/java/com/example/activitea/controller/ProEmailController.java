@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.activitea.Dto.ProEmailDto;
+import com.example.activitea.entity.ValidationResult;
 import com.example.activitea.service.ProEmailService;
 
 @RestController
@@ -27,10 +28,11 @@ public class ProEmailController {
 	//Crud Create a new email
 	@PostMapping("/proemail")
 	public ResponseEntity<String> create(@RequestBody ProEmailDto proEmailDto){
-		if (proEmailService.create(proEmailDto)) {
-			return new ResponseEntity<String>("L'email "+proEmailDto.getProEmail()+" a bien été enregistré",HttpStatus.ACCEPTED);
+		ValidationResult result = proEmailService.create(proEmailDto);
+		if (result.isSuccess()) {
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.ACCEPTED);
 		} else {
-			return new ResponseEntity<String>("L'email "+proEmailDto.getProEmail()+" existe déjà",HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>(result.getMessage(),HttpStatus.BAD_REQUEST);
 		}
 	}
 	

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.activitea.Dto.AddressDto;
 import com.example.activitea.entity.Address;
+import com.example.activitea.entity.ProEmail;
 import com.example.activitea.entity.User;
 import com.example.activitea.repository.AddressRepository;
 
@@ -20,7 +21,8 @@ public class AddressService {
 	
 	//Crud create a new address which will figure on the the coverLetter
 		public boolean create(AddressDto addressDto) {
-			return addressRepository.save(convertDtoToEntity(addressDto))!=null ? true : false;
+			Address address = convertDtoToEntity(addressDto);
+			return addressRepository.save(isActive(address))!=null ? true : false;
 		}
 		
 		//Crud Read and display all addresses from a User
@@ -55,6 +57,17 @@ public class AddressService {
 			        return false;
 			    }
 			}
+		
+		//method to set Active attribute to true 
+		public Address isActive(Address address) {
+			List<Address> addressList= addressRepository.findByUserId(address.getUser().getId());
+			for (Address userAddress : addressList) {
+				userAddress.setActive(false);
+				addressRepository.save(userAddress);
+			}
+			address.setActive(true);
+			return address;
+		}
 			
 		//Method to convert Dto to entity
 		public Address convertDtoToEntity(AddressDto addressDto) {

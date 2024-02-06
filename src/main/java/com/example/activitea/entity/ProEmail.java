@@ -23,6 +23,8 @@ public class ProEmail {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;
+	
+	private boolean active; 
 
 	public int getId() {
 		return id;
@@ -47,6 +49,15 @@ public class ProEmail {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
 	
 	
 }

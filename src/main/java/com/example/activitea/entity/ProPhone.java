@@ -18,10 +18,12 @@ public class ProPhone {
 	
 	@NotBlank(message = "Ce champs est requis")	
 	@Column(length=13)
-	private String Phone;
+	private String phone;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;
+	
+	private boolean active;
 
 	public int getId() {
 		return id;
@@ -31,12 +33,13 @@ public class ProPhone {
 		this.id = id;
 	}
 
+
 	public String getPhone() {
-		return Phone;
+		return phone;
 	}
 
 	public void setPhone(String phone) {
-		Phone = phone;
+		this.phone = phone;
 	}
 
 	public User getUser() {
@@ -45,6 +48,14 @@ public class ProPhone {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 	

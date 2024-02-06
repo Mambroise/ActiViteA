@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.activitea.Dto.ProPhoneDto;
 import com.example.activitea.entity.ProPhone;
 import com.example.activitea.entity.User;
+import com.example.activitea.entity.ValidationResult;
 import com.example.activitea.repository.ProPhoneRepository;
 
 @Service
@@ -18,12 +19,18 @@ public class ProPhoneService {
 	@Autowired
 	private ProPhoneRepository proPhoneRepository;
 	
-	//Crud create a new Pro Phone number which will figure on the the coverLetter
-		public boolean create(ProPhoneDto proPhoneDto) {
-			if(proPhoneRepository.save(convertDtoToEntity(proPhoneDto))!=null) {
-				return true;
-			}else {
-				return false;
+		//Crud create a new Pro Phone number which will figure on the the coverLetter
+		public ValidationResult create(ProPhoneDto proPhoneDto) {
+			ProPhone proPhone =convertDtoToEntity(proPhoneDto);
+			if (proPhoneRepository.findByPhone(proPhone.getPhone())!= null) {
+				return new ValidationResult(false, "Le numéro "+proPhone.getPhone()+" existe déja");
+				
+			} else {
+				if(proPhoneRepository.save(isActive(proPhone))!=null) {
+					return new ValidationResult(true, "Le numéro "+proPhone.getPhone()+" a bien été enrgistré");
+				}else {
+					return new ValidationResult(false, "Le numéro n'a pas pu être enregistré, veuillez réessayer");
+				}
 			}
 		}
 		
@@ -43,6 +50,7 @@ public class ProPhoneService {
 			return proPhoneRepository.findById(proPhoneId).isEmpty() ? true :  false ;
 		}
 		
+		//Crud update the selected pro phone number
 		public boolean updateProPhone(int phoneId, ProPhoneDto proPhonceDto) {
 			 Optional<ProPhone> optionalProPhone = proPhoneRepository.findById(phoneId);
 			    
@@ -56,12 +64,25 @@ public class ProPhoneService {
 			    }
 		}
 		
+		//method to set Active attribute to true 
+		public ProPhone isActive(ProPhone proPhone) {
+			
+			List<ProPhone> phoneList= proPhoneRepository.findByUserId(proPhone.getUser().getId());
+			for (ProPhone phone : phoneList) {
+				phone.setActive(false);
+				proPhoneRepository.save(phone);
+			}
+			proPhone.setActive(true);
+			return proPhone;
+		}
+		
 		//Method to convert Dto to entity
 		public ProPhone convertDtoToEntity(ProPhoneDto proPhoneDto) {
 		ProPhone proPhone=new ProPhone();
 		User user=new User();
 		user.setId(proPhoneDto.getUserId());
 		proPhone.setPhone(proPhoneDto.getPhone().trim());
+		proPhone.setActive(true);
 		proPhone.setUser(user);
 		return proPhone;
 		}

@@ -1,6 +1,7 @@
 package com.example.activitea.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,5 +14,6 @@ public interface ProEmailRepository extends JpaRepository<ProEmail, Integer>{
 //	@Query(value="SELECT * FROM pro_email WHERE user_id =?1", nativeQuery=true)
 //	List<ProEmail> findEmailByUserId(int userId);
 	List<ProEmail> findByUserId(int userId);
+	Optional<ProEmail> findByUserIdAndActiveIsTrue(int userId);
 	
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.activitea.Dto.ProEmailDto;
 import com.example.activitea.entity.ProEmail;
 import com.example.activitea.entity.User;
+import com.example.activitea.entity.ValidationResult;
 import com.example.activitea.repository.ProEmailRepository;
 
 @Service
@@ -18,12 +19,19 @@ public class ProEmailService {
 	public ProEmailRepository proEmailRepository;
 
 	//Crud create a new professionnal email which will figure on the the coverLetter
-	public boolean create(ProEmailDto proEmailDto){
+	public ValidationResult create(ProEmailDto proEmailDto){
+		
 		if(proEmailRepository.findByEmail(proEmailDto.getProEmail().trim())!=null) {
-			return false;
+			return new ValidationResult(false, "votre email "+proEmailDto.getProEmail()+" existe déjà");
 		}else {
-			proEmailRepository.save(convertDtoToEntity(proEmailDto));
-			return true;
+			ProEmail proEmail = convertDtoToEntity(proEmailDto);
+			if (proEmailRepository.save(isActive(proEmail)) != null) {
+				return new ValidationResult(true, "votre email "+proEmailDto.getProEmail()+" a été enregistré");
+			} else {
+				return new ValidationResult(false, "votre email n'a pas pu être enregistré");
+			}
+			
+			
 		}
 	}
 	
@@ -39,8 +47,7 @@ public class ProEmailService {
 	
 	//crud  update the proemail
 	public boolean updateProEmail(int emailId, ProEmailDto proEmailDto) {
-		 Optional<ProEmail> optionalProEmail = proEmailRepository.findById(emailId);
-		    
+		 Optional<ProEmail> optionalProEmail = proEmailRepository.findById(emailId);  
 		    if (optionalProEmail.isPresent()) {
 		        ProEmail proEmail = optionalProEmail.get();
 		        proEmail.setEmail(proEmailDto.getProEmail());
@@ -55,6 +62,17 @@ public class ProEmailService {
 	public boolean deleteEmail(int emailId) {
 		proEmailRepository.deleteById(emailId);
 		return proEmailRepository.findById(emailId).isEmpty() ? true :  false ;
+	}
+	
+	//method to set Active attribute to true 
+	public ProEmail isActive(ProEmail proEmail) {
+		List<ProEmail> emailList= proEmailRepository.findByUserId(proEmail.getUser().getId());
+		for (ProEmail email : emailList) {
+			email.setActive(false);
+			proEmailRepository.save(email);
+		}
+		proEmail.setActive(true);
+		return proEmail;
 	}
 	
 	//Convert DTO to Entity
