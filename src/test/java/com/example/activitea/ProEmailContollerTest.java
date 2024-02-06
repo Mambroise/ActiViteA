@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.example.activitea.Dto.ProEmailDto;
 import com.example.activitea.controller.ProEmailController;
+import com.example.activitea.entity.ValidationResult;
 import com.example.activitea.service.ProEmailService;
 
 class ProEmailControllerTest {
@@ -36,7 +37,7 @@ class ProEmailControllerTest {
         ProEmailDto proEmailDto = new ProEmailDto();
         proEmailDto.setProEmail("test@example.com");
 
-        when(proEmailService.create(proEmailDto)).thenReturn(true);
+        when(proEmailService.create(proEmailDto)).thenReturn(new ValidationResult(true, null));
 
         ResponseEntity<String> response = proEmailController.create(proEmailDto);
 
@@ -49,7 +50,7 @@ class ProEmailControllerTest {
         ProEmailDto proEmailDto = new ProEmailDto();
         proEmailDto.setProEmail("test@example.com");
 
-        when(proEmailService.create(proEmailDto)).thenReturn(false);
+        when(proEmailService.create(proEmailDto)).thenReturn(new ValidationResult(false, null));
 
         ResponseEntity<String> response = proEmailController.create(proEmailDto);
 
